@@ -113,6 +113,21 @@ void timer_util_perf_update(timer_util_perf_t *perf_timer)
 }
 
 
+void timer_util_isr(void)
+{
+	// Check for overflow and increment the upper bits if necessary
+	if (LL_TIM_IsActiveFlag_UPDATE(timer_util_handler.timer_handler))
+	{
+		LL_TIM_ClearFlag_UPDATE(timer_util_handler.timer_handler);
+#if TIMER_UTIL_TIMER_SIZE == 0
+		timer_util_handler.global_time += 0x10000;
+#else
+		timer_util_handler.global_time += 0x100000000;
+#endif
+	}
+}
+
+
 /* Initialize the timer_util module */
 timer_util_status_t timer_util_init(TIM_TypeDef *htim)
 {
