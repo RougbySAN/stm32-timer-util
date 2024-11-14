@@ -11,7 +11,7 @@
 #include "tim.h"
 #include "stdbool.h"
 
-#define TIMER_UTIL_TIMER_SIZE	1	// 0 = 16 bit timer
+#define TIMER_UTIL_TIMER_SIZE	0	// 0 = 16 bit timer
 									// 1 = 32 bit timer
 
 

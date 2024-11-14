@@ -143,6 +143,13 @@ timer_util_status_t timer_util_init(TIM_TypeDef *htim)
 	/* Disable all interrupts */
 	htim->DIER = 0;
 
+	/* Set the ARR Register */
+#if TIMER_UTIL_TIMER_SIZE == 0
+	htim->ARR = 0x0000FFFF;
+#else
+	htim->ARR = 0xFFFFFFFF;
+#endif
+
 	/* Enable Counter Overflow interrupt */
 	LL_TIM_EnableIT_UPDATE(htim);
 
