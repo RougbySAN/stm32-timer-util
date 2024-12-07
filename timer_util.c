@@ -21,8 +21,14 @@ timer_util_handler_t timer_util_handler;
 timer_util_time_t timer_util_get_tick(void)
 {
 	__IO uint32_t cnt_val = timer_util_handler.timer_handler->CNT;
+	TIM_TypeDef *local_handler = timer_util_handler.timer_handler;
+#if TIMER_UTIL_TIMER_SIZE == 0
+	uint16_t cnt_val = local_handler->CNT;
+#else
+	uint32_t cnt_val = local_handler->CNT;
+#endif
 	// Check for overflow and increment the upper bits if necessary
-	if (LL_TIM_IsActiveFlag_UPDATE(timer_util_handler.timer_handler))
+	if (READ_BIT(local_handler->SR, TIM_SR_UIF))
 	{
 		LL_TIM_ClearFlag_UPDATE(timer_util_handler.timer_handler);
 #if TIMER_UTIL_TIMER_SIZE == 0
@@ -30,13 +36,13 @@ timer_util_time_t timer_util_get_tick(void)
 #else
 		timer_util_handler.global_time += 0x100000000;
 #endif
-		cnt_val = timer_util_handler.timer_handler->CNT;
+		cnt_val = local_handler->CNT;
 	}
 
 	// Return the combined value of the upper bits and current timer count
 #if TIMER_UTIL_TIMER_SIZE == 0
 	return (timer_util_handler.global_time & 0xFFFFFFFFFFFF0000) |
-		   (cnt_val & 0x0000FFFF);
+		   (cnt_val);
 #else
 	return (timer_util_handler.global_time & 0xFFFFFFFF00000000) |
 		   (cnt_val);
@@ -87,6 +93,14 @@ void timer_util_perf_init(timer_util_perf_t *perf_timer)
 void timer_util_perf_start(timer_util_perf_t *perf_timer)
 {
 	perf_timer->last_time = timer_util_get_tick();
+}
+
+
+void timer_util_perf_update_elpased(timer_util_perf_t *perf_timer)
+{
+	timer_util_time_t current_time = timer_util_get_tick();
+	perf_timer->elapsed = (float)(current_time - perf_timer->last_time);
+	perf_timer->last_time = current_time;
 }
 
 

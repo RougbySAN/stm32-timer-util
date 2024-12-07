@@ -11,14 +11,14 @@
 #include "tim.h"
 #include "stdbool.h"
 
-#define TIMER_UTIL_TIMER_SIZE	0	// 0 = 16 bit timer
+#define TIMER_UTIL_TIMER_SIZE	1	// 0 = 16 bit timer
 									// 1 = 32 bit timer
 
 
 // Time Conversion to Tick Macros
-#define US_TO_TICK	(us) ((us))
-#define MS_TO_TICK	(ms) ((ms) * 1000)
-#define S_TO_TICK	(s)	 ((s) * 1000 * 1000)
+#define US_TO_TICK(us) ((us))
+#define MS_TO_TICK(ms) ((ms) * 1000)
+#define S_TO_TICK(s)	 ((s) * 1000 * 1000)
 
 
 // Time Conversion Macros
@@ -86,6 +86,7 @@ bool timer_util_check_elapsed(timer_util_time_t *time, timer_util_time_t timeout
 void timer_util_perf_init(timer_util_perf_t *perf_timer);
 void timer_util_perf_start(timer_util_perf_t *perf_timer);
 void timer_util_perf_update(timer_util_perf_t *perf_timer);
+void timer_util_perf_update_elpased(timer_util_perf_t *perf_timer);
 
 
 /* Initialize the timer_util module */
