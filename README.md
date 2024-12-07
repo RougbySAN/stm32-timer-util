@@ -29,22 +29,21 @@ Timer util for stm32 microcontrollers that uses a single timer with overflow pro
 Interrupt:
 You can place timer_util_isr() in Timer interrupt handler. The isr will add the ARR amount to the
 global timer variable. However, for very fast timers with quick interrupt triggers, frequent interrupts
-could overwhelm the rest of the system. Also, Interrupts introduces a system that is not deterministic
+could overload the rest of the system. Also, interrupts introduce a non-deterministic element
 which could trigger in between any two lines of codes.
 
 Polling:
-I prefer to use the polling method due to the fact that i can determine when to handle the overflow case.
+Polling is often preferred, as it allows control over when the overflow is handled
 For polling there is one important consideration which is that you have to call timer_util_get_tick() function
-which checks for the overflow flag and handles the overflow of the timer. The timer_util_get_tick() function must be called at least once before 
+which checks and handles the overflow flag. The timer_util_get_tick() function must be called at least once before 
 another overflow happens. In short prevent two overflows from happening. This is not difficult since even for a 16-bit timer with 1us tick period
 overflows in ~65 milliseconds.
 
 ## Performance Measurement
-There are performence measurement utility structure and functions in the library that simplifys the debugging process and provide
-useful information for external systems and telemetry.
+The library includes a performance measurement utility structure and functions that simplify debugging and provide useful information for external systems and telemetry
 
 ## Elapsed Time Measurement
-One of the main uses of the timer is to measure elapsed time for main loops and message timers.
+The timer can be used to measure elapsed time for main loops, message timers, and similar tasks
 
 ## Contribution
-Feel free to fork and share your real-life experiance on you project and suggest improvements.
+Feel free to fork the repository, share your real-life experience, and suggest improvements
