@@ -152,6 +152,7 @@ timer_util_status_t timer_util_init(TIM_TypeDef *htim)
 
 	/* Enable Counter Overflow interrupt */
 	LL_TIM_EnableIT_UPDATE(htim);
+	LL_TIM_ClearFlag_UPDATE(htim);
 
 	/* Start the timer */
 	LL_TIM_EnableCounter(htim);
