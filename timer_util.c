@@ -20,7 +20,6 @@ timer_util_handler_t timer_util_handler;
  * */
 timer_util_time_t timer_util_get_tick(void)
 {
-	__IO uint32_t cnt_val = timer_util_handler.timer_handler->CNT;
 	TIM_TypeDef *local_handler = timer_util_handler.timer_handler;
 #if TIMER_UTIL_TIMER_SIZE == 0
 	uint16_t cnt_val = local_handler->CNT;
@@ -30,7 +29,7 @@ timer_util_time_t timer_util_get_tick(void)
 	// Check for overflow and increment the upper bits if necessary
 	if (READ_BIT(local_handler->SR, TIM_SR_UIF))
 	{
-		LL_TIM_ClearFlag_UPDATE(timer_util_handler.timer_handler);
+		WRITE_REG(local_handler->SR, ~(TIM_SR_UIF));
 #if TIMER_UTIL_TIMER_SIZE == 0
 		timer_util_handler.global_time += 0x10000;
 #else
